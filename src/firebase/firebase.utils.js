@@ -3,23 +3,49 @@ import 'firebase/firestore';
 import 'firebase/auth';
 
 const config = {
-    apiKey: "AIzaSyCXi4sccWhu7kZyge-0OEzp513zNnLtQUA",
-    authDomain: "milas-shop.firebaseapp.com",
-    databaseURL: "https://milas-shop.firebaseio.com",
-    projectId: "milas-shop",
-    storageBucket: "",
-    messagingSenderId: "259081738355",
-    appId: "1:259081738355:web:7e1da99f4f497738"
-  };
+  apiKey: "AIzaSyCXi4sccWhu7kZyge-0OEzp513zNnLtQUA",
+  authDomain: "milas-shop.firebaseapp.com",
+  databaseURL: "https://milas-shop.firebaseio.com",
+  projectId: "milas-shop",
+  storageBucket: "",
+  messagingSenderId: "259081738355",
+  appId: "1:259081738355:web:7e1da99f4f497738"
+};
 
-  firebase.initializeApp(config);
+export const createUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
 
-  export const auth = firebase.auth();
-  export const firestore = firebase.firestore();
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapshot = await userRef.get();
 
-  // Google auth config
+  if (!snapshot.exists) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
 
-  const provider = new firebase.auth.GoogleAuthProvider();
-  provider.setCustomParameters({ prompt: 'select_account'});
-  export const signInWithGoogle = () => auth.signInWithPopup(provider);
-  export default firebase;
+    try {
+      await userRef.set({
+        displayName,
+        email,
+        createdAt,
+        ...additionalData
+      })
+    } catch (error) {
+      console.log('error creating user', error.message);
+    }
+  }
+
+  return userRef;
+
+}
+
+firebase.initializeApp(config);
+
+export const auth = firebase.auth();
+export const firestore = firebase.firestore();
+
+// Google auth config
+
+const provider = new firebase.auth.GoogleAuthProvider();
+provider.setCustomParameters({ prompt: 'select_account' });
+export const signInWithGoogle = () => auth.signInWithPopup(provider);
+export default firebase;
