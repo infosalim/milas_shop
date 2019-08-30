@@ -7,7 +7,6 @@ import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
 
 // styles
 import './sign-up.styles.scss';
-import { async } from 'q';
 
 class SignUp extends React.Component{
     constructor(){
