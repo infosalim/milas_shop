@@ -27,6 +27,15 @@
       margin-top: 30px;
       margin-left: auto;
       font-size: 36px;
+      display: flex;
+      align-items: center;
+
+      button{
+        background: none;
+        height: auto;
+        width: auto;
+        margin-left: 100px;
+      }
     }
   }
   
