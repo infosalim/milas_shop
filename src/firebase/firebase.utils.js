@@ -38,6 +38,18 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
 
 }
 
+export const addCollectionAndDocuments = async (collectionKey, ObjectToAdd) => {
+  const collectionRef = firestore.collection(collectionKey);
+  
+  const batch = firestore.batch();
+  ObjectToAdd.forEach(obj => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  });
+  return await batch.commit();
+}
+
+
 firebase.initializeApp(config);
 
 export const auth = firebase.auth();
